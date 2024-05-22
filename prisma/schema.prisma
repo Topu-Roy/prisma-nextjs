@@ -8,11 +8,97 @@ datasource db {
     relationMode = "prisma"
 }
 
-model Post {
-    id        String   @id @map("_id") @db.ObjectId
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model User {
+    id           String        @id @default(auto()) @map("_id") @db.ObjectId
+    authId       String
+    role         Role          @default(USER)
+    email        String?
+    imageUrl     String?
+    firstName    String?
+    lastName     String?
+    cartProducts CartProduct[]
+    reviews      Review[]
 
-    @@index([name])
+    @@index([id, authId])
+}
+
+model Product {
+    id           String        @id @default(auto()) @map("_id") @db.ObjectId
+    createdBy    String
+    productTitle String
+    description  String
+    image        String?
+    price        Int
+    status       Status?
+    category     Category
+    tag          Tag
+    color        Color
+    cartProduct  CartProduct[]
+    review       Review[]
+}
+
+model Review {
+    id   String   @id @default(auto()) @map("_id") @db.ObjectId
+    text String
+    date DateTime @default(now())
+    name String
+    rate Int
+
+    Product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+    productId String  @db.ObjectId
+    User      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    String  @db.ObjectId
+}
+
+model CartProduct {
+    id           String  @id @default(auto()) @map("_id") @db.ObjectId
+    quantity     Int
+    price        Int
+    productTitle String
+    isSelected   Boolean @default(false)
+    product      Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+    productId    String  @db.ObjectId
+    User         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId       String  @db.ObjectId
+
+    @@unique([productId, userId])
+}
+
+enum Role {
+    USER
+    ADMIN
+}
+
+enum Color {
+    Black
+    White
+    Red
+    Brown
+    Green
+}
+
+enum Category {
+    Chair
+    Table
+    Lamp
+    Drawer
+    Bed
+    Bookshelf
+    Sofa
+}
+
+enum Tag {
+    Minimalistic
+    Modern
+    Stylish
+    Elegant
+    Ambient
+    Luxurious
+}
+
+enum Status {
+    Regular
+    New
+    Popular
+    Out_of_stock
 }

@@ -1,6 +1,9 @@
+import { Toaster } from "@/components/ui/toaster";
 import "@/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
+import NavBar from "./_components/NavBar";
+import Footer from "./_components/Footer";
 
 export const metadata = {
   title: "Create T3 App",
@@ -15,7 +18,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
-      <body>{children}</body>
+      <body>
+        <NavBar />
+        {children}
+        <Toaster />
+        <Footer />
+      </body>
     </html>
   );
 }
