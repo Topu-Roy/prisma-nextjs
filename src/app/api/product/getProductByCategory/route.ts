@@ -8,7 +8,6 @@ export async function POST(req: Request) {
     if (!body) NextResponse.json({ message: "Bad Request" }, { status: 401 })
 
     const result = getProductsByCategoryBodySchema.safeParse(body)
-    console.log("Parsed: ", result)
 
     if (!result.success) return NextResponse.json({ message: "Parse Error" }, { status: 500 })
 

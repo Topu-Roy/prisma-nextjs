@@ -1,8 +1,7 @@
-import { authCallbackBodySchema, authCallbackResponseSchema } from "@/zod/authcallback/authcallback";
+import { authCallbackResponseSchema, type authCallbackBodyType } from "@/zod/authcallback/authcallback";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import axios from "axios";
 import { redirect } from "next/navigation";
-import { TypeOf } from "zod";
 
 export default async function AuthCallback() {
   const { getUser } = getKindeServerSession();
@@ -14,12 +13,12 @@ export default async function AuthCallback() {
       {
         authId: user.id,
         //TODO: Add default fallback image for user
-        imageUrl: user.picture || "",
+        imageUrl: user.picture ?? "",
         role: "USER",
         firstName: user.given_name,
         lastName: user.family_name,
         email: user.email,
-      } satisfies TypeOf<typeof authCallbackBodySchema>,
+      } satisfies authCallbackBodyType,
       {
         headers: {
           "Content-Type": "application/json",
@@ -28,7 +27,6 @@ export default async function AuthCallback() {
     );
 
     const validatedResponse = authCallbackResponseSchema.parse(res.data)
-    console.log(validatedResponse.user)
 
     if (!validatedResponse.user.id) return redirect("/error");
 

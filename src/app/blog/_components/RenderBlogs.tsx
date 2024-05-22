@@ -14,8 +14,8 @@ export default function RenderBlogs(props: props) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const itemPerPage = 9;
-  let totalPages = useRef(Math.ceil(props.blogs.length / itemPerPage));
-  let lastIndex = useRef(0);
+  const totalPages = useRef(Math.ceil(props.blogs.length / itemPerPage));
+  const lastIndex = useRef(0);
 
   useEffect(() => {
     setBlogs(props.blogs.slice(0, itemPerPage));

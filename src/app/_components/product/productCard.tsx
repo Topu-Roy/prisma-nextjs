@@ -37,7 +37,7 @@ export default function Product({ product, className }: Props) {
               <Image
                 height={1024}
                 width={1024}
-                src={product.image || "/images/defaultNoData.png"}
+                src={product.image ?? "/images/defaultNoData.png"}
                 alt={product.productTitle}
                 className="aspect-square h-full w-full justify-center transition-all duration-500 ease-in-out group-hover:scale-105"
               />

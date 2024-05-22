@@ -13,7 +13,6 @@ export default async function HomepagePage() {
   const req = await fetch("http://localhost:3000/api/product/getAllProducts")
   const jsonResponse: unknown = await req.json();
   const products = getAllProductResponseSchema.safeParse(jsonResponse);
-  // console.log(products.data?.products)
 
   if (!products.success) {
     console.error(products.error);

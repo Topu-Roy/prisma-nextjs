@@ -11,8 +11,7 @@ export default function RecommendedBlogs({ blogs, currentBlogId }: Props) {
   function shuffleArray(array: Array<BlogType>) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      //@ts-ignore
-      [array[i], array[j]] = [array[j], array[i]];
+      [array[i], array[j]] = [array[j], array[i]] as [BlogType, BlogType];
     }
     return array;
   }

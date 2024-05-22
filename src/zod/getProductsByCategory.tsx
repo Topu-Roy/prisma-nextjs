@@ -9,6 +9,8 @@ export const getProductsByCategoryBodySchema = z.object({
     category: CategoryEnum
 })
 
+export type getProductsByCategoryBodyType = z.infer<typeof getProductsByCategoryBodySchema>
+
 const product = z.object({
     id: z.string(),
     createdBy: z.string(),

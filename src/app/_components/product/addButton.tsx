@@ -1,13 +1,12 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "../../../components/ui/button";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
-// import { api } from "@/trpc/react";
 import { useCartStore } from "@/zustand/cart/cartStore";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import { z, TypeOf } from "zod";
-import { addToCartBodySchema, addToCartResponseSchema } from "@/zod/cart/addToCart";
+import { type addToCartBodyType, addToCartResponseSchema } from "@/zod/cart/addToCart";
+import axios from "axios";
 
 type Props = {
   productId: string;
@@ -20,13 +19,13 @@ type Props = {
 export default function AddButton(props: Props) {
   const { productId, quantity, className, price, productTitle } = props;
 
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
   const products_store = useCartStore((store) => store.products);
   const setProducts_store = useCartStore((store) => store.setProducts);
 
   const { toast } = useToast();
-  const { getUser } = useKindeBrowserClient()
+  const { getUser } = useKindeBrowserClient();
   const user = getUser();
 
   async function handleAddToCart() {
@@ -40,38 +39,40 @@ export default function AddButton(props: Props) {
 
     setIsLoading(true);
 
-    const response = await fetch('/api/cart/addToCart', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        authId: user?.id,
-        price: price,
-        productId: productId,
-        productTitle: productTitle,
-        quantity: quantity,
-      } as TypeOf<typeof addToCartBodySchema>)
-    }).then((res) => {
-      const jsonData = res.json();
-      const validatedData = addToCartResponseSchema.parse(jsonData);
-      return validatedData;
-    }).finally(() => {
-      setIsLoading(false)
-    })
+    const res = await axios
+      .post(
+        "http://localhost:3000/api/cart/addToCart",
+        {
+          authId: user?.id,
+          price: price,
+          productId: productId,
+          productTitle: productTitle,
+          quantity: quantity,
+        } satisfies addToCartBodyType,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      )
+      .finally(() => {
+        setIsLoading(false);
+      });
 
-    if (response.action === "alreadyInCart") {
+    const validatedData = addToCartResponseSchema.parse(res.data);
+
+    if (validatedData.action === "alreadyInCart") {
       return toast({
         title: "Already in cart",
         description: "Product already exist in the cart",
       });
     }
 
-    if (response.action === "updated") {
+    if (validatedData.action === "updated") {
       setProducts_store(
         products_store.map((product) =>
           product.id === productId
-            ? { ...product, ...response.product }
+            ? { ...product, ...validatedData.product }
             : product,
         ),
       );
@@ -82,9 +83,9 @@ export default function AddButton(props: Props) {
       });
     }
 
-    if (response.action === "created") {
-      if (response.product) {
-        setProducts_store([...products_store, response.product]);
+    if (validatedData.action === "created") {
+      if (validatedData.product) {
+        setProducts_store([...products_store, validatedData.product]);
       }
       toast({
         title: "Added to cart",
@@ -93,80 +94,13 @@ export default function AddButton(props: Props) {
     }
   }
 
-
-
-  // const { mutate, isPending, data } = api.cart.createNewCartItem.useMutation();
-
-  // function giveFeedback() {
-  //   if (data === undefined) return;
-
-  //   if (data) {
-  //     if (data.action === "alreadyInCart") {
-  //       return toast({
-  //         title: "Already in cart",
-  //         description: "Product already exist in the cart",
-  //       });
-  //     }
-
-  //     if (data.action === "updated") {
-  //       setProducts_store(
-  //         products_store.map((product) =>
-  //           product.id === productId
-  //             ? { ...product, ...data.updatedCartProduct }
-  //             : product,
-  //         ),
-  //       );
-  //       toast({
-  //         title: "Updated cart",
-  //         description: "Product updated successfully",
-  //       });
-  //     }
-
-  //     if (data.action === "created") {
-  //       if (data.createdCartProduct) {
-  //         setProducts_store([...products_store, data.createdCartProduct]);
-  //       }
-  //       toast({
-  //         title: "Added to cart",
-  //         description: "Product successfully added to cart",
-  //       });
-  //     }
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   giveFeedback();
-  // }, [data]);
-
-  // const handleClick = () => {
-  //   if (!user) {
-  //     return toast({
-  //       variant: "destructive",
-  //       title: "Please login first",
-  //       description: "Oh no, you are not logged in...!",
-  //     });
-  //   }
-
-  //   mutate({
-  //     productId,
-  //     authId: user.id,
-  //     productTitle,
-  //     price,
-  //     quantity,
-  //   });
-  // };
-
   return (
     <Button
       onClick={() => handleAddToCart()}
       size="lg"
       className={cn("rounded-md font-bold", className)}
     >
-      {isLoading ? (
-        "Adding to cart"
-      ) : (
-        "Add to cart"
-      )}
+      {isLoading ? "Adding to cart" : "Add to cart"}
     </Button>
   );
 }

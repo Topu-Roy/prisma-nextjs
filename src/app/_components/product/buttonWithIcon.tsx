@@ -87,40 +87,6 @@ export default function ButtonWithIcon(props: Props) {
     }
   }
 
-  // const { mutate } = api.cart.createNewCartItem.useMutation({
-  //   onSuccess: () => {
-  //     router.refresh();
-  //     toast({
-  //       title: "Added to cart",
-  //       description: "Product successfully added to cart",
-  //     });
-  //   },
-  //   onError: () => {
-  //     toast({
-  //       variant: "destructive",
-  //       title: "Something went wrong",
-  //       description: "Product not added to cart",
-  //     });
-  //   },
-  // });
-
-  // const handleClick = () => {
-  //   if (!user) {
-  //     return toast({
-  //       variant: "destructive",
-  //       title: "Please login first",
-  //       description: "Oh no, you are not logged in",
-  //     });
-  //   }
-  //   mutate({
-  //     productId,
-  //     authId: user.id,
-  //     productTitle,
-  //     price,
-  //     quantity,
-  //   });
-  // };
-
   return (
     <Button
       onClick={() => handleAddToCart()}

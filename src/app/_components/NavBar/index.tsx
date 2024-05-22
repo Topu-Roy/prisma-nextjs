@@ -11,7 +11,6 @@ export default async function NavBar() {
   const { isAuthenticated: checkAuth, getUser } = getKindeServerSession();
   const isAuthenticated = await checkAuth();
   const user = await getUser();
-  console.log(user);
   return (
     <header className="fixed top-0 z-50 flex h-[5.5rem] w-[100vw] items-center justify-center bg-white px-2 shadow-sm">
       <div className="mx-auto flex w-[98vw] max-w-[85rem] flex-row justify-between">
@@ -66,14 +65,14 @@ export default async function NavBar() {
             {!isAuthenticated ? <LoginLink>Sign In</LoginLink> : (
               <div className="profile-blob">
                 {user?.picture ? (
-                  <img
-                    className="avatar"
+                  <Image
+                    height={100}
+                    width={100}
                     src={user?.picture}
-                    alt="user profile avatar"
-                    referrerPolicy="no-referrer"
+                    alt={`${user?.given_name}`}
                   />
                 ) : (
-                  <div className="avatar">
+                  <div>
                     {user?.given_name?.[0]}
                     {user?.family_name?.[0]}
                   </div>

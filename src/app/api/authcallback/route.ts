@@ -20,7 +20,7 @@ export async function POST(req: Request) {
 
     if (isUserAlreadyExist) {
 
-        // * If any changes have been made to the user profile
+        // * If anything changes to the user profile
         // * Then we update database also
         if (validateBody.data.firstName !== isUserAlreadyExist.firstName) {
             const updateUser = await db.user.update({

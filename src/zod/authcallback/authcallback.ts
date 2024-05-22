@@ -9,6 +9,8 @@ export const authCallbackBodySchema = z.object({
     email: z.string().email().nullable()
 })
 
+
+
 const userSchema = z.object({
     id: z.string(),
     authId: z.string(),
@@ -22,3 +24,5 @@ const userSchema = z.object({
 export const authCallbackResponseSchema = z.object({
     user: userSchema
 })
+
+export type authCallbackBodyType = z.infer<typeof authCallbackBodySchema>

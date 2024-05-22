@@ -18,6 +18,8 @@ export const addToCartBodySchema = z.object({
     quantity: z.number()
 })
 
+export type addToCartBodyType = z.infer<typeof addToCartBodySchema>
+
 export const addToCartResponseSchema = z.object({
     action: z.enum(["updated", "created", "alreadyInCart"]),
     product,

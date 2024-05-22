@@ -1,5 +1,5 @@
-import { Category, Color, Product, Tag } from "@prisma/client";
-import { create, createStore } from "zustand";
+import { type Category, type Color, type Product, type Tag } from "@prisma/client";
+import { create } from "zustand";
 
 type ShopState = {
   productsBackup: Product[];

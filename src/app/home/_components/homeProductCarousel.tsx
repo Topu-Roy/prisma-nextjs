@@ -2,7 +2,7 @@ import React from "react";
 import RenderProductCarousel from "./renderProductCarousel";
 import { Heading } from "@/app/_components/heading";
 import { Text } from "@/app/_components/text";
-import { Product } from "@prisma/client";
+import { type Product } from "@prisma/client";
 
 type Props = {
   products: Array<Product>;

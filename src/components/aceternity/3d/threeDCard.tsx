@@ -6,7 +6,6 @@ import {
   CardContainer,
 } from "@/components/aceternity/3d-card";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
 
 type Props = {
   heading: string;
