@@ -3,7 +3,7 @@ import { authCallbackBodySchema } from "@/zod/authcallback/authcallback";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-    const body = await req.json();
+    const body: unknown = await req.json();
 
     if (!body) return NextResponse.json({ message: "Body not found" }, { status: 401 });
 

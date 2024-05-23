@@ -1,4 +1,4 @@
-import { CartProduct } from "@prisma/client";
+import { type CartProduct } from "@prisma/client";
 import { create } from 'zustand'
 
 
