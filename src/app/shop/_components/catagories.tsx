@@ -13,11 +13,9 @@ type ProductCatagoriesType = {
 }[];
 
 export default function Catagories() {
-  const { productsBackup, selectedCategory, setSelectedCategory } =
-    useShopStore((store) => store);
+  const { productsBackup, selectedCategory, setSelectedCategory } = useShopStore((store) => store);
 
-  const [productCategories, setProductCategories] =
-    useState<ProductCatagoriesType>([]);
+  const [productCategories, setProductCategories] = useState<ProductCatagoriesType>([]);
 
   useEffect(() => {
     const categories: ProductCatagoriesType = [

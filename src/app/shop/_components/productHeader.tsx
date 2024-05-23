@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect, useState } from "react";
 import useDebounce from "@/hooks/debounce";
 import { cn } from "@/lib/utils";
@@ -27,21 +28,14 @@ type Props = {
 };
 
 export default function ProductHeader({ sheetOpen, setSheetOpen }: Props) {
-  const { searchInputText, setSearchInputText } =
-    useShopStore((store) => store);
+  const { searchInputText, setSearchInputText, setSelectedSorting, } = useShopStore((store) => store);
 
   // * States
   const [searchText, setSearchText] = useState("");
-  const [sortingMethod, setSortingMethod] =
-    useState<SortingMethodType>("default");
-
+  const [sortingMethod, setSortingMethod] = useState<SortingMethodType>("default");
   const debouncedText = useDebounce(searchText);
 
   const sortingOptions: SortingMethodType[] = ["default", "price"];
-
-  function handleClearSearch() {
-    setSearchText("");
-  }
 
   useEffect(() => {
     setSearchInputText(debouncedText);
@@ -52,7 +46,7 @@ export default function ProductHeader({ sheetOpen, setSheetOpen }: Props) {
   }, [searchInputText]);
 
   useEffect(() => {
-    setSortingMethod(sortingMethod);
+    setSelectedSorting(sortingMethod);
   }, [sortingMethod]);
 
   return (
@@ -87,7 +81,7 @@ export default function ProductHeader({ sheetOpen, setSheetOpen }: Props) {
               className="h-10 rounded-md border-0 bg-transparent bg-white px-3 text-sm"
             />
             <Button
-              onClick={handleClearSearch}
+              onClick={() => setSearchText("")}
               variant={"outline"}
               className="h-10 rounded-full  p-2.5"
             >
