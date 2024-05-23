@@ -1,12 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "../../../components/ui/button";
-import { BASE_URL, cn } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
 import { useCartStore } from "@/zustand/cart/cartStore";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import { type addToCartBodyType, addToCartResponseSchema } from "@/zod/cart/addToCart";
-import axios from "axios";
+import { addToCart } from "@/actions/addToCart";
 
 type Props = {
   productId: string;
@@ -39,40 +38,36 @@ export default function AddButton(props: Props) {
 
     setIsLoading(true);
 
-    const res = await axios
-      .post(
-        `${BASE_URL}/api/cart/addToCart`,
-        {
-          authId: user?.id,
-          price: price,
-          productId: productId,
-          productTitle: productTitle,
-          quantity: quantity,
-        } satisfies addToCartBodyType,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      )
-      .finally(() => {
-        setIsLoading(false);
-      });
+    const response = await addToCart({
+      authId: user?.id,
+      price: price,
+      productId: productId,
+      productTitle: productTitle,
+      quantity: quantity,
+    }).finally(() => {
+      setIsLoading(false);
+    });
 
-    const validatedData = addToCartResponseSchema.parse(res.data);
+    if (!response) {
+      return toast({
+        variant: "destructive",
+        title: "Something went wrong",
+        description: "Please try again later",
+      })
+    }
 
-    if (validatedData.action === "alreadyInCart") {
+    if (response.action === "alreadyInCart") {
       return toast({
         title: "Already in cart",
         description: "Product already exist in the cart",
       });
     }
 
-    if (validatedData.action === "updated") {
+    if (response.action === "updated") {
       setProducts_store(
         products_store.map((product) =>
           product.id === productId
-            ? { ...product, ...validatedData.product }
+            ? { ...product, ...response.product }
             : product,
         ),
       );
@@ -83,9 +78,9 @@ export default function AddButton(props: Props) {
       });
     }
 
-    if (validatedData.action === "created") {
-      if (validatedData.product) {
-        setProducts_store([...products_store, validatedData.product]);
+    if (response.action === "created") {
+      if (response.product) {
+        setProducts_store([...products_store, response.product]);
       }
       toast({
         title: "Added to cart",

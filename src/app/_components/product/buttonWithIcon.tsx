@@ -5,7 +5,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { useCartStore } from "@/zustand/cart/cartStore";
-import { type addToCartBodyType, addToCartResponseSchema } from "@/zod/cart/addToCart";
+import { addToCart } from "@/actions/addToCart";
 
 type Props = {
   children: React.JSX.Element;
@@ -34,24 +34,23 @@ export default function ButtonWithIcon(props: Props) {
       });
     }
 
-    const response = await fetch('/api/cart/addToCart', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        authId: user?.id,
-        price: price,
-        productId: productId,
-        productTitle: productTitle,
-        quantity: quantity,
-      } satisfies addToCartBodyType)
-    }).then((res) => {
-      const jsonData = res.json();
-      const validatedData = addToCartResponseSchema.parse(jsonData);
+    const response = await addToCart({
+      authId: user?.id,
+      price: price,
+      productId: productId,
+      productTitle: productTitle,
+      quantity: quantity,
+    }).finally(() => {
       router.refresh();
-      return validatedData;
     })
+
+    if (!response) {
+      return toast({
+        variant: "destructive",
+        title: "Something went wrong",
+        description: "Please try again later",
+      });
+    }
 
     if (response.action === "alreadyInCart") {
       return toast({

@@ -1,9 +1,10 @@
-import { Toaster } from "@/components/ui/toaster";
 import "@/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
 import NavBar from "./_components/NavBar";
 import Footer from "./_components/Footer";
+import { Toaster } from "@/components/ui/toaster";
+
 
 export const metadata = {
   title: "Create T3 App",

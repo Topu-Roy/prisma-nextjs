@@ -7,18 +7,13 @@ import NewArrivals from "./_components/newArrivals";
 import OurBenefits from "./_components/ourBenefits";
 import ReadBlogSection from "./_components/readBlogSection";
 import SecondCTA from "./_components/secondCTA";
-import { getAllProductResponseSchema } from "@/zod/getAllProducts";
-import { BASE_URL } from "@/lib/utils";
-// import axios from "axios";
+import { getAllProducts } from "@/actions/getAllProducts";
 
 export default async function HomepagePage() {
-  // const req = await axios.get(`${BASE_URL}/api/product/getAllProducts`)
-  const res: unknown = await fetch(`${BASE_URL}/api/product/getAllProducts`).then(response => response.json())
+  const products = await getAllProducts();
 
-  const products = getAllProductResponseSchema.safeParse(res);
-
-  if (!products.success) {
-    console.error(products.error);
+  if (!products) {
+    console.error(products);
     return (
       <div className="">
         Products not found
@@ -31,9 +26,9 @@ export default async function HomepagePage() {
       <HeroSection />
       <BrandsWorkedWith />
       <CategoryCTA />
-      <HomeProductCarousel products={products.data.products} />
+      <HomeProductCarousel products={products} />
       <SecondCTA />
-      <NewArrivals products={products.data.products} />
+      <NewArrivals products={products} />
       <OurBenefits />
       <ReadBlogSection />
     </div>

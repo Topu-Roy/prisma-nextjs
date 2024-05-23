@@ -1,49 +1,19 @@
 import React from "react";
 import ThreeDCard from "@/components/aceternity/3d/threeDCard";
 import { Heading } from "@/app/_components/heading";
-import { type getProductsByCategoryBodyType, getProductsByCategoryResponseSchema } from "@/zod/getProductsByCategory";
-import axios from "axios";
-import { BASE_URL } from "@/lib/utils";
+import { getProductsByCategory } from "@/actions/getProductsByCategory";
 
 export default async function CategoryCTA() {
-  const chairsRes = await axios.post(
-    `${BASE_URL}/api/product/getProductByCategory`,
-    {
-      category: "Chair",
-    } satisfies getProductsByCategoryBodyType,
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    },
-  );
+  const chairs = await getProductsByCategory({ category: 'Chair' });
+  const lamps = await getProductsByCategory({ category: "Lamp" })
 
-  const lampsRes = await axios.post(
-    `${BASE_URL}/api/product/getProductByCategory`,
-    {
-      category: "Lamp",
-    } satisfies getProductsByCategoryBodyType,
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    },
-  );
-
-  if (chairsRes.status !== 200 ?? lampsRes.status !== 200) return null;
-  const chairs = getProductsByCategoryResponseSchema.safeParse(chairsRes.data);
-
-  if (!chairs.success) {
-    console.log(chairs.error);
+  if (!chairs) {
+    console.log("Chairs not found");
+    return null;
   }
 
-  const lamps = getProductsByCategoryResponseSchema.safeParse(lampsRes.data);
-  if (!lamps.success) {
-    console.log(lamps.error);
-  }
-
-  if (!chairs ?? !lamps) {
-    console.log("data not found");
+  if (!lamps) {
+    console.log("Lamps not found");
     return null;
   }
 
@@ -57,16 +27,16 @@ export default async function CategoryCTA() {
         <ThreeDCard
           heading="Try new our chairs"
           subHeading="Brand new collection of chairs and modern design."
-          imageURL={chairs.data?.products[4]?.image ?? ""}
-          imageAlt={chairs.data?.products[4]?.productTitle ?? ""}
+          imageURL={chairs[4]?.image ?? ""}
+          imageAlt={chairs[4]?.productTitle ?? ""}
           link="/shop"
           linkName="Shop Now"
         />
         <ThreeDCard
           heading="Check out our new Lamps"
           subHeading="Brand new collection of Lamps with minimal design."
-          imageURL={lamps.data?.products[2]?.image ?? ""}
-          imageAlt={lamps.data?.products[2]?.productTitle ?? ""}
+          imageURL={lamps[2]?.image ?? ""}
+          imageAlt={lamps[2]?.productTitle ?? ""}
           link="/shop"
           linkName="Shop Now"
         />
