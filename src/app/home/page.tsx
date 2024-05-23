@@ -9,11 +9,13 @@ import ReadBlogSection from "./_components/readBlogSection";
 import SecondCTA from "./_components/secondCTA";
 import { getAllProductResponseSchema } from "@/zod/getAllProducts";
 import { BASE_URL } from "@/lib/utils";
-import axios from "axios";
+// import axios from "axios";
 
 export default async function HomepagePage() {
-  const req = await axios.get(`${BASE_URL}/api/product/getAllProducts`)
-  const products = getAllProductResponseSchema.safeParse(req.data);
+  // const req = await axios.get(`${BASE_URL}/api/product/getAllProducts`)
+  const res: unknown = await fetch(`${BASE_URL}/api/product/getAllProducts`).then(response => response.json())
+
+  const products = getAllProductResponseSchema.safeParse(res);
 
   if (!products.success) {
     console.error(products.error);
