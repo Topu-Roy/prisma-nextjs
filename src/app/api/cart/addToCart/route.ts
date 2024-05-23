@@ -8,6 +8,8 @@ export async function POST(req: Request) {
     if (!body) return NextResponse.json({ message: "Body not found" }, { status: 401 })
     const validatedBody = addToCartBodySchema.safeParse(body);
 
+    console.log("AddToCart validatedBody :", validatedBody)
+
     if (!validatedBody.success) return NextResponse.json({ message: validatedBody.error }, { status: 500 });
 
     type ActionType = "updated" | "created" | "alreadyInCart";
@@ -16,7 +18,7 @@ export async function POST(req: Request) {
 
     const user = await db.user.findFirst({
         where: {
-            id: validatedBody.data.authId
+            authId: validatedBody.data.authId
         }
     })
 

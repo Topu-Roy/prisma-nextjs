@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { useCartStore } from "@/zustand/cart/cartStore";
 import { type addToCartBodyType, addToCartResponseSchema } from "@/zod/cart/addToCart";
-import { TypeOf } from "zod";
 
 type Props = {
   children: React.JSX.Element;

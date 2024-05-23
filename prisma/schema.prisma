@@ -19,7 +19,7 @@ model User {
     cartProducts CartProduct[]
     reviews      Review[]
 
-    @@index([id, authId])
+    @@index([authId])
 }
 
 model Product {
@@ -35,6 +35,8 @@ model Product {
     color        Color
     cartProduct  CartProduct[]
     review       Review[]
+
+    @@index([category])
 }
 
 model Review {
