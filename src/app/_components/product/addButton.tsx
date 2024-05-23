@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "../../../components/ui/button";
-import { cn } from "@/lib/utils";
+import { BASE_URL, cn } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
 import { useCartStore } from "@/zustand/cart/cartStore";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
@@ -41,7 +41,7 @@ export default function AddButton(props: Props) {
 
     const res = await axios
       .post(
-        "http://localhost:3000/api/cart/addToCart",
+        `${BASE_URL}/api/cart/addToCart`,
         {
           authId: user?.id,
           price: price,

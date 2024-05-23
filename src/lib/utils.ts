@@ -13,3 +13,11 @@ export function scrollToTop() {
     })
   }, 50)
 }
+
+export let BASE_URL: string;
+if (process.env.NODE_ENV === "production") {
+  const developmentUrl = process.env.VERCEL_URL as string
+  BASE_URL = `https://${developmentUrl}`
+} else {
+  BASE_URL = "http://localhost:3000"
+}

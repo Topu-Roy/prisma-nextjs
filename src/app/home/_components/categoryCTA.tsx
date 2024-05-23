@@ -3,10 +3,11 @@ import ThreeDCard from "@/components/aceternity/3d/threeDCard";
 import { Heading } from "@/app/_components/heading";
 import { type getProductsByCategoryBodyType, getProductsByCategoryResponseSchema } from "@/zod/getProductsByCategory";
 import axios from "axios";
+import { BASE_URL } from "@/lib/utils";
 
 export default async function CategoryCTA() {
   const chairsRes = await axios.post(
-    "http://localhost:3000/api/product/getProductByCategory",
+    `${BASE_URL}/api/product/getProductByCategory`,
     {
       category: "Chair",
     } satisfies getProductsByCategoryBodyType,
@@ -18,7 +19,7 @@ export default async function CategoryCTA() {
   );
 
   const lampsRes = await axios.post(
-    "http://localhost:3000/api/product/getProductByCategory",
+    `${BASE_URL}/api/product/getProductByCategory`,
     {
       category: "Lamp",
     } satisfies getProductsByCategoryBodyType,

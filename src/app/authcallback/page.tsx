@@ -1,3 +1,4 @@
+import { BASE_URL } from "@/lib/utils";
 import { authCallbackResponseSchema, type authCallbackBodyType } from "@/zod/authcallback/authcallback";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import axios from "axios";
@@ -9,7 +10,7 @@ export default async function AuthCallback() {
 
   if (user) {
     const res = await axios.post(
-      "http://localhost:3000/api/authcallback",
+      `${BASE_URL}/api/authcallback`,
       {
         authId: user.id,
         //TODO: Add default fallback image for user
