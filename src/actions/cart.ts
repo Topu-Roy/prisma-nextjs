@@ -61,3 +61,60 @@ export async function addToCart(props: AddToCartProps) {
 
     return { action: action.created, product: createdCartProduct };
 }
+
+export async function getAllCartItems({ authId }: { authId: string }) {
+
+    const user = await db.user.findFirst({
+        where: {
+            authId,
+        }
+    })
+
+    const cartProducts = await db.cartProduct.findMany({
+        where: {
+            userId: user?.id,
+        }
+    })
+
+    return cartProducts;
+}
+
+export async function getCartItemById({ id }: { id: string }) {
+
+    const cartItem = await db.cartProduct.findFirst({
+        where: {
+            id
+        },
+        include: {
+            product: true
+        }
+    })
+
+    return cartItem;
+}
+
+export async function deleteCartItem({ id }: { id: string }) {
+
+    const cartItem = await db.cartProduct.delete({
+        where: {
+            id
+        }
+    })
+
+    if (cartItem.id) return { success: true }
+
+    return { success: false };
+}
+
+export async function updateCartItemQuantity({ id, quantity }: { id: string, quantity: number }) {
+    const updatedItem = await db.cartProduct.update({
+        where: {
+            id
+        },
+        data: {
+            quantity
+        }
+    })
+
+    return updatedItem;
+}

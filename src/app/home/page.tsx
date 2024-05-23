@@ -7,7 +7,7 @@ import NewArrivals from "./_components/newArrivals";
 import OurBenefits from "./_components/ourBenefits";
 import ReadBlogSection from "./_components/readBlogSection";
 import SecondCTA from "./_components/secondCTA";
-import { getAllProducts } from "@/actions/getAllProducts";
+import { getAllProducts } from "@/actions/productAction";
 
 export default async function HomepagePage() {
   const products = await getAllProducts();

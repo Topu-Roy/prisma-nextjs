@@ -1,7 +1,7 @@
 import React from "react";
 import ThreeDCard from "@/components/aceternity/3d/threeDCard";
 import { Heading } from "@/app/_components/heading";
-import { getProductsByCategory } from "@/actions/getProductsByCategory";
+import { getProductsByCategory } from "@/actions/productAction";
 
 export default async function CategoryCTA() {
   const chairs = await getProductsByCategory({ category: 'Chair' });

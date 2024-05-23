@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
 import { useCartStore } from "@/zustand/cart/cartStore";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import { addToCart } from "@/actions/addToCart";
+import { addToCart } from "@/actions/cart";
 
 type Props = {
   productId: string;
@@ -39,7 +39,7 @@ export default function AddButton(props: Props) {
     setIsLoading(true);
 
     const response = await addToCart({
-      authId: user?.id,
+      authId: user.id,
       price: price,
       productId: productId,
       productTitle: productTitle,
