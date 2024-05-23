@@ -5,7 +5,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { useCartStore } from "@/zustand/cart/cartStore";
-import { addToCartBodySchema, addToCartResponseSchema } from "@/zod/cart/addToCart";
+import { type addToCartBodyType, addToCartResponseSchema } from "@/zod/cart/addToCart";
 import { TypeOf } from "zod";
 
 type Props = {
@@ -46,7 +46,7 @@ export default function ButtonWithIcon(props: Props) {
         productId: productId,
         productTitle: productTitle,
         quantity: quantity,
-      } as TypeOf<typeof addToCartBodySchema>)
+      } satisfies addToCartBodyType)
     }).then((res) => {
       const jsonData = res.json();
       const validatedData = addToCartResponseSchema.parse(jsonData);
