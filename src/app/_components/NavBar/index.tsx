@@ -4,13 +4,14 @@ import Image from "next/image";
 import { Button } from "../../../components/ui/button";
 import MobileMenu from "./mobileMenu";
 import CartIconWithUser from "./cartIcon";
-import { LoginLink, LogoutLink, getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { Search } from "lucide-react";
+import ProfileIcon from "./profileIcon";
 
 export default async function NavBar() {
-  const { isAuthenticated: checkAuth, getUser } = getKindeServerSession();
-  const isAuthenticated = await checkAuth();
+  const { getUser } = getKindeServerSession();
   const user = await getUser();
+
   return (
     <header className="fixed top-0 z-50 flex h-[5.5rem] w-[100vw] items-center justify-center bg-white px-2 shadow-sm">
       <div className="mx-auto flex w-[98vw] max-w-[85rem] flex-row justify-between">
@@ -62,29 +63,25 @@ export default async function NavBar() {
           <CartIconWithUser />
 
           <div>
-            {!isAuthenticated ? <LoginLink>Sign In</LoginLink> : (
-              <div className="profile-blob">
-                {user?.picture ? (
-                  <Image
-                    height={100}
-                    width={100}
-                    src={user?.picture}
-                    alt={`${user?.given_name}`}
-                  />
-                ) : (
-                  <div>
-                    {user?.given_name?.[0]}
-                    {user?.family_name?.[0]}
-                  </div>
-                )}
-                <div>
-                  <p className="text-heading-2">
-                    {user?.given_name} {user?.family_name}
-                  </p>
-
-                  <LogoutLink className="text-subtle">Log out</LogoutLink>
-                </div>
-              </div>
+            {!user ? (
+              <>
+                <Link href={"/api/auth/login?post_login_redirect_url=/authcallback"}>
+                  <Button variant={'ghost'}>
+                    Sign In
+                  </Button>
+                </Link>
+                <Link href={"/api/auth/register?post_login_redirect_url=/authcallback"}>
+                  <Button variant={'outline'}>
+                    Register
+                  </Button>
+                </Link>
+              </>
+            ) : (
+              <ProfileIcon
+                firstName={user?.given_name ?? ""}
+                lastName={user?.family_name ?? ""}
+                userId={user.id}
+              />
             )}
           </div>
         </div>
