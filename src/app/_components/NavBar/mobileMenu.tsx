@@ -7,6 +7,7 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Squeeze as Hamburger } from 'hamburger-react'
 
 export default function MobileMenu() {
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -21,11 +22,9 @@ export default function MobileMenu() {
         <SheetTrigger asChild>
           <Button
             onClick={() => handleClick()}
-            className="flex h-[2rem] flex-col items-center justify-center gap-1.5 rounded p-1 md:hidden"
+            className="p-0 md:hidden"
           >
-            <div className="h-[2px] w-[1.6rem] rounded-full bg-white" />
-            <div className="h-[2px] w-[1.6rem] rounded-full bg-white" />
-            <div className="h-[2px] w-[1.6rem] rounded-full bg-white" />
+            <Hamburger toggled={sheetOpen} toggle={setSheetOpen} />
           </Button>
         </SheetTrigger>
         <SheetContent side={'left'}>
