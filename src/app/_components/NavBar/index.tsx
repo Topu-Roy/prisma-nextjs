@@ -64,7 +64,7 @@ export default async function NavBar() {
 
           <div>
             {!user ? (
-              <>
+              <div className="flex justify-center items-center gap-2 flex-col">
                 <Link href={"/api/auth/login?post_login_redirect_url=/authcallback"}>
                   <Button variant={'ghost'}>
                     Sign In
@@ -75,7 +75,7 @@ export default async function NavBar() {
                     Register
                   </Button>
                 </Link>
-              </>
+              </div>
             ) : (
               <ProfileIcon
                 firstName={user?.given_name ?? ""}
