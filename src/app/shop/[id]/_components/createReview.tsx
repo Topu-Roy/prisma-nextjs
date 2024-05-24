@@ -55,6 +55,8 @@ export default function CreateReview({
       return;
     }
 
+    setOpen(false);
+
     const response = await createRevive({
       authId: user.id,
       productId: productId,
@@ -62,7 +64,6 @@ export default function CreateReview({
       name: name,
       description: description,
     }).finally(() => {
-      setOpen(false);
       router.refresh();
     });
 
