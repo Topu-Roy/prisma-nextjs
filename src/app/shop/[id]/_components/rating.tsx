@@ -7,7 +7,7 @@ type Props = {
   readonly: boolean;
   className?: string;
   totalStars?: number;
-  setRate?: React.Dispatch<React.SetStateAction<number>>;
+  handleSetRate?: (newRate: number) => void;
 };
 
 const Rating = ({
@@ -15,20 +15,20 @@ const Rating = ({
   readonly,
   className,
   totalStars = 5,
-  setRate,
+  handleSetRate,
 }: Props) => {
   const [rating, setRating] = useState(rate);
   const [hover, setHover] = useState(0);
 
   useEffect(() => {
-    if (setRate) {
-      setRate(rating);
+    if (handleSetRate) {
+      handleSetRate(rating);
     }
-  }, [rating]);
+  }, [rating, handleSetRate]);
 
   return (
     <div className={cn("flex space-x-1", className)}>
-      {[...Array(totalStars)].map((_, index) => {
+      {[...Array<number>(totalStars)].map((_, index) => {
         const ratingValue = index + 1;
 
         return (

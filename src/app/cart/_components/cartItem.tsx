@@ -14,7 +14,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { CartProduct, type Product } from "@prisma/client";
+import { type CartProduct, type Product } from "@prisma/client";
 import { useToast } from "@/components/ui/use-toast";
 import { useCartStore } from "@/zustand/cart/cartStore";
 import Link from "next/link";
@@ -39,25 +39,27 @@ export default function CartItem(props: Props) {
   //* Zustand
   const products_store = useCartStore((store) => store.products);
   const setProducts_store = useCartStore((store) => store.setProducts);
-  const removeProductById_store = useCartStore(
-    (store) => store.removeProductById,
-  );
+  const removeProductById_store = useCartStore((store) => store.removeProductById);
 
   const { toast } = useToast();
 
-  async function getCartItemInfo() {
-    const data = await getCartItemById({ id: productId })
-    if (data) {
-      setProduct(data.product)
-    }
+  //* Abstracted for linting purposes
+  function setProduct_opt() {
+    setProducts(products_store);
   }
 
   useEffect(() => {
-    setProducts(products_store);
+    setProduct_opt()
   }, [products_store]);
 
   useEffect(() => {
-    getCartItemInfo();
+    async function getCartItemInfo() {
+      await getCartItemById({ id: productId }).then((data) => {
+        if (data) setProduct(data.product);
+      })
+    }
+
+    void getCartItemInfo();
   }, [productId]);
 
   async function handleRemove() {
@@ -110,7 +112,7 @@ export default function CartItem(props: Props) {
             <div className="shrink-0 lg:order-1">
               <Image
                 className="size-36 rounded-md"
-                src={product.image || ""}
+                src={product.image ?? ""}
                 alt={product.productTitle}
                 height={300}
                 width={300}
@@ -175,7 +177,7 @@ export default function CartItem(props: Props) {
                 <input
                   className="peer h-[2.5rem] w-[45vw] sm:w-[11rem] opacity-0"
                   type="checkbox"
-                  checked={isSelected || false}
+                  checked={isSelected ?? false}
                   onChange={() => handleCheck()}
                 />
                 <Button

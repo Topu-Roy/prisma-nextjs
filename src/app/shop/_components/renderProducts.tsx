@@ -1,5 +1,5 @@
 "use client";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { scrollToTop } from "@/lib/utils";
 import Product from "@/app/_components/product/productCard";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,7 @@ import { Frown, LoaderCircle } from "lucide-react";
 
 type Props = {
   products: ProductType[];
-  setSheetOpen: Dispatch<SetStateAction<boolean>>;
+  setSheetOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function RenderProducts(props: Props) {

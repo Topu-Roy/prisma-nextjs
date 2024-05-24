@@ -14,7 +14,7 @@ type ProductProps = {
     userId: string | null,
 }
 
-export default function Product({ description, price, productTitle, productImage, productId, userId }: ProductProps) {
+export default function Product({ price, productTitle, productImage, productId, userId }: ProductProps) {
     return (
         <div className="space-y-6 overflow-hidden rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
             <Link href={`/shop/${productId}`} className="overflow-hidden rounded">

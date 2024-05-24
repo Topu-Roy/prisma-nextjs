@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import ProductHeader from "./productHeader";
 import RenderProducts from "./renderProducts";
-import { Product } from "@prisma/client";
+import { type Product } from "@prisma/client";
 
 type Props = {
   products: Product[];

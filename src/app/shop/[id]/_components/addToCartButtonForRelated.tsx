@@ -46,6 +46,7 @@ export default function AddToCartButtonForRelated(props: Props) {
             productTitle: productTitle,
             quantity: 1,
         }).finally(() => {
+            router.refresh();
             setIsLoading(false);
         });
 

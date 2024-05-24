@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Text } from "@/app/_components/text";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
@@ -21,6 +21,7 @@ export default function CreateReview({
 }: Props) {
   const [open, setOpen] = useState(false);
   const [rate, setRate] = useState(0);
+  const handleSetRate = useCallback((newRate: number) => setRate && setRate(newRate), []);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [rateErr, setRateErr] = useState(false);
@@ -119,7 +120,7 @@ export default function CreateReview({
                       rate={rate}
                       readonly={false}
                       className="-mx-4 scale-75"
-                      setRate={setRate}
+                      handleSetRate={handleSetRate}
                     />
                     <span>({rate})</span>
                   </div>

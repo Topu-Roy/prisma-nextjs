@@ -24,29 +24,6 @@ export default function FilterByPrice() {
     setSelectedMaxPrice,
   } = useShopStore((store) => store);
 
-  useEffect(() => {
-    if (selectedMaxPrice !== 2000 && selectedMinPrice !== 0) {
-      setSliderValue(2000);
-      setSelectedSliderPrice(sliderValue);
-    }
-  }, [selectedMaxPrice, selectedMinPrice, sliderValue]);
-
-  useEffect(() => {
-    if (selectedSliderPrice !== 2000) {
-      setMinPrice(0);
-      setMaxPrice(2000);
-
-      setSelectedMinPrice(minPrice);
-      setSelectedMaxPrice(maxPrice);
-    }
-  }, [selectedSliderPrice, minPrice, maxPrice]);
-
-  useEffect(() => {
-    setMinPrice(selectedMinPrice);
-    setMaxPrice(selectedMaxPrice);
-    setSliderValue(selectedSliderPrice);
-  }, [selectedMaxPrice, selectedMinPrice, selectedSliderPrice]);
-
   const handleMinPrice = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value;
     const numericValue = parseInt(inputValue.replace(/\D/g, ""));
@@ -76,9 +53,48 @@ export default function FilterByPrice() {
   }
 
   useEffect(() => {
-    setSelectedMinPrice(debouncedMinPrice);
-    setSelectedMaxPrice(debouncedMaxPrice);
-    setSelectedSliderPrice(debouncedSliderPrice);
+    function updateValues() {
+      if (selectedMaxPrice !== 2000 && selectedMinPrice !== 0) {
+        setSliderValue(2000);
+        setSelectedSliderPrice(sliderValue);
+      }
+    }
+
+    updateValues();
+  }, [selectedMaxPrice, selectedMinPrice, sliderValue]);
+
+  useEffect(() => {
+    function updateValues() {
+      if (selectedSliderPrice !== 2000) {
+        setMinPrice(0);
+        setMaxPrice(2000);
+
+        setSelectedMinPrice(minPrice);
+        setSelectedMaxPrice(maxPrice);
+      }
+    }
+
+    updateValues();
+  }, [selectedSliderPrice, minPrice, maxPrice]);
+
+  useEffect(() => {
+    function updateValues() {
+      setMinPrice(selectedMinPrice);
+      setMaxPrice(selectedMaxPrice);
+      setSliderValue(selectedSliderPrice);
+    }
+
+    updateValues();
+  }, [selectedMaxPrice, selectedMinPrice, selectedSliderPrice]);
+
+  useEffect(() => {
+    function updatePrice() {
+      setSelectedMinPrice(debouncedMinPrice);
+      setSelectedMaxPrice(debouncedMaxPrice);
+      setSelectedSliderPrice(debouncedSliderPrice);
+    }
+
+    updatePrice();
   }, [debouncedMaxPrice, debouncedMinPrice, debouncedSliderPrice]);
 
   return (
@@ -109,7 +125,7 @@ export default function FilterByPrice() {
         <Slider
           defaultValue={[sliderValue]}
           value={[sliderValue]}
-          onValueChange={(val) => setSliderValue(val[0] || 0)}
+          onValueChange={(val) => setSliderValue(val[0] ?? 0)}
           className="flex-1"
           max={2000}
           step={1}

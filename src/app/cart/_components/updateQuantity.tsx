@@ -25,28 +25,6 @@ export default function UpdateQuantity(props: Props) {
 
   const { toast } = useToast();
 
-  async function updateQuantity() {
-    const updatedItem = await updateCartItemQuantity({ id: cartItemId, quantity: debouncedQuantity });
-
-    if (!updatedItem) {
-      setQuantityState(prevQuantity);
-      return toast({
-        variant: "destructive",
-        title: "Something went wrong",
-        description: "Something went wrong while updating the quantity",
-      });
-    }
-
-    setPrevQuantity(quantityState);
-    setProducts_store(
-      products_store.map((product) =>
-        product.id === cartItemId
-          ? { ...product, quantity: quantityState }
-          : product,
-      ),
-    );
-  }
-
   function handleQuantityChange({ action }: { action: "increment" | "decrement" }) {
     if (action === "decrement" && quantity === 1) {
       return;
@@ -62,7 +40,44 @@ export default function UpdateQuantity(props: Props) {
   }
 
   useEffect(() => {
-    updateQuantity()
+    async function handleUpdateQuantity() {
+      try {
+        const response = await updateCartItemQuantity({
+          id: cartItemId,
+          quantity: debouncedQuantity,
+        }).catch(err => console.log(err));
+
+        if (response) {
+          setPrevQuantity(quantityState);
+          setProducts_store(
+            products_store.map((product) =>
+              product.id === cartItemId
+                ? { ...product, quantity: quantityState }
+                : product
+            )
+          );
+        } else {
+          setQuantityState(prevQuantity);
+          toast({
+            variant: "destructive",
+            title: "Something went wrong",
+            description: "Failed to update the quantity",
+          });
+        }
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error(error);
+          setQuantityState(prevQuantity);
+          toast({
+            variant: "destructive",
+            title: "Something went wrong",
+            description: "Something went wrong while updating the quantity",
+          });
+        }
+      }
+    }
+
+    void handleUpdateQuantity()
   }, [debouncedQuantity]);
 
   useEffect(() => {

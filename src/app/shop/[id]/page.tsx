@@ -9,7 +9,6 @@ import ProductAddToCart from "./_components/productAddToCart";
 import RelatedProducts from "./_components/relatedProducts";
 import dynamic from "next/dynamic";
 import Chip from "@/app/cart/_components/chip";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { getProductByIdWithReviews, getProductReviewCountByRating } from "@/actions/productAction";
 const CreateReview = dynamic(() => import("./_components/createReview"), { ssr: false });
 
@@ -18,8 +17,6 @@ export default async function ProductDetails({
 }: {
   params: { id: string };
 }) {
-  const { getUser } = getKindeServerSession()
-  const user = await getUser();
   const product = await getProductByIdWithReviews({ id: params.id });
 
   const oneStarReviews = await getProductReviewCountByRating({ productId: params.id, rate: 1 });
@@ -63,7 +60,7 @@ export default async function ProductDetails({
                 height={1000}
                 width={1000}
                 className="w-full"
-                src={product.image || ""}
+                src={product.image ?? ""}
                 alt={product.productTitle}
               />
             </div>
@@ -197,7 +194,7 @@ export default async function ProductDetails({
           description={product.description}
           price={product.price}
           productId={product.id}
-          productImage={product.image || ""}
+          productImage={product.image ?? ""}
           productTitle={product.productTitle}
         />
       </div>
