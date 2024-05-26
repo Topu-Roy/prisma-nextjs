@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { getUserDetailsByAuthId } from '@/actions/user';
+import { getUserDetailsByAuthId } from '@/actions/userAction';
 import { fallbackUserImageUrl } from '@/lib/defaults';
 import { cn } from '@/lib/utils';
 

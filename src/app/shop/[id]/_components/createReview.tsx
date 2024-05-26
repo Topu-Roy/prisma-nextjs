@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Rating from "./rating";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import { createRevive } from "@/actions/review";
+import { createRevive } from "@/actions/reviewAction";
 
 type Props = {
   productId: string;

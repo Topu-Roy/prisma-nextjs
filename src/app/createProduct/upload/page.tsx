@@ -1,7 +1,6 @@
 "use client";
 import React, { Suspense, useState } from "react";
 import { redirect, useRouter, useSearchParams } from "next/navigation";
-import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { useUploadThing } from "@/lib/uploadthing";
 import Dropzone from "react-dropzone";
@@ -10,6 +9,7 @@ import { toast } from "@/components/ui/use-toast";
 import { Progress } from "@/components/ui/progress";
 
 import { CheckCheck, Cloudy, LoaderCircle } from "lucide-react";
+import { updateImageUrl } from "@/actions/productAction";
 
 function UploaderComponent() {
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -25,8 +25,6 @@ function UploaderComponent() {
 
   //* Validating the id
   if (!id || id === undefined) return redirect('/error')
-  const expectedIdSchema = z.string().min(20).max(28);
-  const parsedId = expectedIdSchema.safeParse(id);
 
   //* This is to show a progress bar when uploading
   const startFakedUploadProgress = () => {
@@ -48,48 +46,41 @@ function UploaderComponent() {
 
   async function updateImage(url: string) {
     setLoading(true);
-    const res = await fetch("/api/product/update", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        id: parsedId.data,
-        image: url,
-      }),
-    });
+    const response = await updateImageUrl({
+      imageUrl: '',
+      productId: '',
+    })
 
-    if (!res.ok) {
+    if (response.status === 'NOT_FOUND') {
       setLoading(false);
       return toast({
         title: "Something went wrong",
-        description: "File not saved on the database",
+        description: "Product couldn't be found on the database",
         variant: "destructive",
       });
     }
 
-    if (res.ok) {
-      const product: unknown = res.json();
+    if (response.status === 'FAILED') {
+      setLoading(false);
+      return toast({
+        title: "Something went wrong",
+        description: "Failed to update url on the database",
+        variant: "destructive",
+      });
+    }
 
-      // * Reset the loading state
+    if (response.status === 'SUCCESS') {
       setLoading(false);
       setUpdatingComplete(true);
 
       // * Redirect to the product detail page
-      // @ts-expect-error
-      router.replace(`/shop/${product.id}`);
+      router.replace(`/shop/${response.product?.id}`);
 
       return toast({
         title: "Success",
         description: "File saved on the database",
       });
     }
-  }
-
-  if (parsedId.error) {
-    return (
-      <div className="mx-auto mt-[6rem] max-w-lg">
-        The recently created product was not found !!
-      </div>
-    );
   }
 
   return (

@@ -36,7 +36,7 @@ model Product {
     cartProduct  CartProduct[]
     review       Review[]
 
-    @@index([category])
+    @@index([category, createdBy])
 }
 
 model Review {

@@ -50,8 +50,8 @@ export default async function NavBar() {
             <Button variant={"ghost"}>Team</Button>
           </Link>
 
-          <Link href="/createProduct">
-            <Button variant={"ghost"}>Create</Button>
+          <Link href="/dashboard">
+            <Button variant={"ghost"}>Dashboard</Button>
           </Link>
         </div>
 

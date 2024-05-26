@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { syncUser } from "@/actions/syncUser";
+import { syncUser } from "@/actions/syncUserAction";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { fallbackUserImageUrl } from "@/lib/defaults";
 
