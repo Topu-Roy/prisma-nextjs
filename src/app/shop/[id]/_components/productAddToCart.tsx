@@ -7,7 +7,7 @@ import { useCartStore } from "@/zustand/cart/cartStore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import { addToCart } from "@/actions/cart";
+import { addToCart } from "@/actions/cartAction";
 
 type Props = {
   productId: string;

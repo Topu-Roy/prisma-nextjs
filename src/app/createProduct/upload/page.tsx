@@ -13,7 +13,7 @@ import { CheckCheck, Cloudy, LoaderCircle } from "lucide-react";
 
 function UploaderComponent() {
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [updatingImageUrl, setUpdatingImageUrl] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [updateComplete, setUpdatingComplete] = useState(false);
 
   //* Getting id from search parameters
@@ -47,7 +47,7 @@ function UploaderComponent() {
   };
 
   async function updateImage(url: string) {
-    setUpdatingImageUrl(true);
+    setLoading(true);
     const res = await fetch("/api/product/update", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -58,7 +58,7 @@ function UploaderComponent() {
     });
 
     if (!res.ok) {
-      setUpdatingImageUrl(false);
+      setLoading(false);
       return toast({
         title: "Something went wrong",
         description: "File not saved on the database",
@@ -70,7 +70,7 @@ function UploaderComponent() {
       const product: unknown = res.json();
 
       // * Reset the loading state
-      setUpdatingImageUrl(false);
+      setLoading(false);
       setUpdatingComplete(true);
 
       // * Redirect to the product detail page
@@ -161,7 +161,7 @@ function UploaderComponent() {
               </div>
             ) : null}
 
-            {updatingImageUrl === true ? (
+            {loading === true ? (
               <div className="flex flex-col items-center justify-center gap-2 pt-4 text-center text-sm text-zinc-500">
                 <LoaderCircle className="h-4 w-4 animate-spin" />
                 <p>Updating in the database...</p>

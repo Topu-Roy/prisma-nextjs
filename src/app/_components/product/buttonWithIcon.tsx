@@ -5,7 +5,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { useCartStore } from "@/zustand/cart/cartStore";
-import { addToCart } from "@/actions/cart";
+import { addToCart } from "@/actions/cartAction";
 
 type Props = {
   children: React.JSX.Element;

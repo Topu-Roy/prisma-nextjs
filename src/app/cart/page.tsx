@@ -8,7 +8,7 @@ import Link from "next/link";
 import RenderCart from "./_components/renderCart";
 import { redirect } from "next/navigation";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { getAllCartItems } from "@/actions/cart";
+import { getAllCartItems } from "@/actions/cartAction";
 
 export default async function CartPage() {
   const { getUser } = getKindeServerSession();

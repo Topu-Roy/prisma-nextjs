@@ -19,7 +19,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useCartStore } from "@/zustand/cart/cartStore";
 import Link from "next/link";
 import { Check, CheckCheck } from "lucide-react";
-import { deleteCartItem, getCartItemById } from "@/actions/cart";
+import { deleteCartItem, getCartItemById } from "@/actions/cartAction";
 
 type Props = {
   cartItemId: string;

@@ -8,8 +8,7 @@ import { inter } from "@/styles/font";
 
 export const metadata = {
   title: "Furnit",
-  description: "Decorate your house with beautiful furniture's.",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  description: "Decorate your house with beautiful furniture's",
 };
 
 export default function RootLayout({

@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
 import { useCartStore } from "@/zustand/cart/cartStore";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import { addToCart } from "@/actions/cart";
+import { addToCart } from "@/actions/cartAction";
 
 type Props = {
   productId: string;

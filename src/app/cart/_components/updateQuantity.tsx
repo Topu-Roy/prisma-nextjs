@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import useDebounce from "@/hooks/debounce";
 import { useCartStore } from "@/zustand/cart/cartStore";
-import { updateCartItemQuantity } from "@/actions/cart";
+import { updateCartItemQuantity } from "@/actions/cartAction";
 
 type Props = {
   cartItemId: string;
