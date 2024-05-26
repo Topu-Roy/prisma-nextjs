@@ -64,14 +64,14 @@ export default async function NavBar() {
 
           <div>
             {!user ? (
-              <div className="flex justify-center items-center gap-2 flex-col">
+              <div className="flex justify-center items-center gap-2">
                 <Link href={"/api/auth/login?post_login_redirect_url=/authcallback"}>
                   <Button variant={'ghost'}>
                     Sign In
                   </Button>
                 </Link>
                 <Link href={"/api/auth/register?post_login_redirect_url=/authcallback"}>
-                  <Button variant={'outline'}>
+                  <Button>
                     Register
                   </Button>
                 </Link>
