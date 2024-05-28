@@ -9,7 +9,6 @@ import { PencilRuler, Shirt, UsersRound } from 'lucide-react'
 import CardComponent from './_components/cardComponent'
 import { Product } from '@prisma/client';
 import { z } from 'zod';
-import Link from 'next/link';
 
 export default function Dashboard() {
     const [products, setProducts] = useState<Product[]>([]);
