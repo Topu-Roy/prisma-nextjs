@@ -125,3 +125,14 @@ export async function updateImageUrl({ imageUrl, productId }: { imageUrl: string
 
     return { status: "SUCCESS", product: updatedProduct };
 }
+
+export async function getProductNeedUpdate_description() {
+    //* If description is empty
+    const products = await db.product.findMany({
+        where: {
+            description: ""
+        }
+    })
+
+    return products;
+}

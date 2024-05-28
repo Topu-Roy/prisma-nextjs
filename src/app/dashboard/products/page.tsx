@@ -61,7 +61,7 @@ export default function ProductDashboard() {
     }, [currentPage, perPage])
 
     return (
-        <div className=''>
+        <main className='max-w-5xl mx-auto'>
             <div className="space-y-3 divide-y">
                 {products.map((product, index) => (
                     <div key={product.id} className="">
@@ -74,6 +74,6 @@ export default function ProductDashboard() {
                 ))}
                 <div className="flex justify-center items-center gap-2">{PaginationButtons}</div>
             </div>
-        </div>
+        </main>
     )
 }

@@ -1,17 +1,21 @@
 "use client"
-import { Card } from '@/components/ui/card'
+
 import React, { useEffect, useState } from 'react'
-import { Text } from '../_components/text'
-import { getTotalProductCount } from '@/actions/productAction'
+import { getAllProducts, getTotalProductCount } from '@/actions/productAction'
 import { getTotalUsersCount } from '@/actions/userAction';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import { useRouter } from 'next/navigation'
 import { PencilRuler, Shirt, UsersRound } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import CardComponent from './_components/cardComponent'
+import { Product } from '@prisma/client';
+import { z } from 'zod';
+import Link from 'next/link';
 
 export default function Dashboard() {
-    const [totalProducts, setTotalProducts] = useState(0)
-    const [totalUsers, setTotalUsers] = useState(0)
+    const [products, setProducts] = useState<Product[]>([]);
+    const [needChangeCount, setNeedChangeCount] = useState(0);
+    const [totalProducts, setTotalProducts] = useState(0);
+    const [totalUsers, setTotalUsers] = useState(0);
     const { getUser, isLoading } = useKindeBrowserClient();
     const user = getUser();
     const router = useRouter();
@@ -20,6 +24,7 @@ export default function Dashboard() {
         if (isLoading) return;
 
         async function getInfo() {
+            const allProducts = await getAllProducts();
             const totalProducts = await getTotalProductCount();
             const totalUsers = await getTotalUsersCount({ authId: user?.id! });
 
@@ -27,54 +32,54 @@ export default function Dashboard() {
 
             setTotalProducts(totalProducts);
             setTotalUsers(totalUsers);
+            setProducts(allProducts);
         }
 
         void getInfo();
     }, [isLoading])
 
+    useEffect(() => {
+        if (isLoading) return;
+
+        const imageUrlSchema = z.object({
+            imageUrl: z.string().url()
+        })
+
+        //* Check if product description is empty
+        const productsWithEmptyDescription = products.map((product) => {
+            if (product.description === '') return product;
+        })
+
+        //* Check if product ImageUrl is not a valid URL
+        const productsWithInvalidImageUrl = products.map((product) => {
+            const parsedUrl = imageUrlSchema.safeParse(product.image);
+
+            if (parsedUrl.error) return product;
+        })
+
+        setNeedChangeCount(productsWithEmptyDescription.length + productsWithInvalidImageUrl.length);
+    }, [products, isLoading])
 
     return (
-        <main>
+        <main className='max-w-5xl mx-auto flex justify-between items-center gap-4'>
             <CardComponent
+                link='/dashboard/products'
                 title='Total products'
                 count={totalProducts}
                 icon={<Shirt />}
             />
             <CardComponent
+                link='/dashboard/users'
                 title='Total users'
                 count={totalUsers}
                 icon={<UsersRound />}
             />
             <CardComponent
-                title='Updated needed'
-                count={totalUsers}
+                link='/dashboard/updates'
+                title='Need updates'
+                count={needChangeCount}
                 icon={<PencilRuler />}
             />
         </main>
-    )
-}
-
-type CardComponentPropsType = {
-    count: number,
-    title: string,
-    icon: React.ReactElement,
-    iconClassName?: string
-}
-
-function CardComponent({ count, title, icon, iconClassName }: CardComponentPropsType) {
-    return (
-        <Card className='max-w-[15rem] p-4 text-left space-y-3'>
-            <div className="flex justify-between items-center">
-                <Text muted size='md' className='font-bold'>
-                    {title}
-                </Text>
-                <span className={cn('text-black/40', iconClassName)}>
-                    {icon}
-                </span>
-            </div>
-            <Text size='max' className='font-bold text-black/90'>
-                {count}
-            </Text>
-        </Card>
     )
 }
