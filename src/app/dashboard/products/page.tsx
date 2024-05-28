@@ -7,7 +7,7 @@ import { getPaginatedProducts, getTotalProductCount } from '@/actions/productAct
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
-export default function Dashboard() {
+export default function ProductDashboard() {
     const [products, setProducts] = useState<Product[]>([])
     const [totalProducts, setTotalProducts] = useState<number>(0)
     const searchParams = useSearchParams();
@@ -22,7 +22,7 @@ export default function Dashboard() {
     for (let i = 1; i <= totalPages; i++) {
         PaginationButtons.push(
             <Link
-                href={`/dashboard?perPage=${perPage}&currentPage=${i}`}
+                href={`/dashboard/products?perPage=${perPage}&currentPage=${i}`}
                 key={i}
             >
                 <Button

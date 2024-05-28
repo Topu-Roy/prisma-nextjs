@@ -69,24 +69,24 @@ export default function CreateProduct() {
             description: "Product created successfully",
         })
 
-        router.replace(`/dashboard/updateImage?id=${response.product?.id}`);
+        router.replace(`/dashboard/create/update?id=${response.product?.id}`);
     }
 
     return (
-        <div className="max-w-7xl mx-auto mt-[4rem] py-[5rem]">
+        <div className="w-full max-w-7xl mx-auto">
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 mx-auto space-y-6">
                     <FormField
                         control={form.control}
                         name="productTitle"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Title</FormLabel>
+                                <FormLabel><span className="text-rose-500">*</span>Title</FormLabel>
                                 <FormControl>
                                     <Input placeholder="title" {...field} />
                                 </FormControl>
                                 <FormDescription>
-                                    This is your public display name.
+                                    Provide a title for the product.
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>
@@ -97,12 +97,12 @@ export default function CreateProduct() {
                         name="description"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Description</FormLabel>
+                                <FormLabel><span className="text-rose-500">*</span>Description</FormLabel>
                                 <FormControl>
                                     <Textarea placeholder="description"  {...field} />
                                 </FormControl>
                                 <FormDescription>
-                                    This is your public display name.
+                                    Give a brief description of the product.
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>
@@ -113,7 +113,7 @@ export default function CreateProduct() {
                         name="price"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Price</FormLabel>
+                                <FormLabel><span className="text-rose-500">*</span>Price</FormLabel>
                                 <FormControl>
                                     <Input
                                         type="number"
@@ -123,7 +123,7 @@ export default function CreateProduct() {
                                     />
                                 </FormControl>
                                 <FormDescription>
-                                    This is your public display name.
+                                    Minimum price is $5.
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>
@@ -135,7 +135,7 @@ export default function CreateProduct() {
                             name="color"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Color</FormLabel>
+                                    <FormLabel><span className="text-rose-500">*</span>Color</FormLabel>
                                     <FormControl>
                                         <Select {...field} onValueChange={field.onChange}>
                                             <SelectTrigger className="w-[180px]">
@@ -151,9 +151,6 @@ export default function CreateProduct() {
                                             </SelectContent>
                                         </Select>
                                     </FormControl>
-                                    <FormDescription>
-                                        This is your public display name.
-                                    </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -163,7 +160,7 @@ export default function CreateProduct() {
                             name="category"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Category</FormLabel>
+                                    <FormLabel><span className="text-rose-500">*</span>Category</FormLabel>
                                     <FormControl>
                                         <Select {...field} onValueChange={field.onChange}>
                                             <SelectTrigger className="w-[180px]">
@@ -179,9 +176,6 @@ export default function CreateProduct() {
                                             </SelectContent>
                                         </Select>
                                     </FormControl>
-                                    <FormDescription>
-                                        This is your public display name.
-                                    </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -191,7 +185,7 @@ export default function CreateProduct() {
                             name="status"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Status</FormLabel>
+                                    <FormLabel><span className="text-rose-500">*</span>Status</FormLabel>
                                     <FormControl>
                                         <Select {...field} onValueChange={field.onChange}>
                                             <SelectTrigger className="w-[180px]">
@@ -207,9 +201,6 @@ export default function CreateProduct() {
                                             </SelectContent>
                                         </Select>
                                     </FormControl>
-                                    <FormDescription>
-                                        This is your public display name.
-                                    </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -219,7 +210,7 @@ export default function CreateProduct() {
                             name="tag"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Tag</FormLabel>
+                                    <FormLabel><span className="text-rose-500">*</span>Tag</FormLabel>
                                     <FormControl>
                                         <Select {...field} onValueChange={field.onChange}>
                                             <SelectTrigger className="w-[180px]">
@@ -235,9 +226,6 @@ export default function CreateProduct() {
                                             </SelectContent>
                                         </Select>
                                     </FormControl>
-                                    <FormDescription>
-                                        This is your public display name.
-                                    </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}

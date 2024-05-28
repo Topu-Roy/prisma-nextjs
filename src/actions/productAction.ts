@@ -9,6 +9,21 @@ export async function getAllProducts() {
     return products;
 }
 
+export async function getPaginatedProducts({ currentPage, perPage }: { currentPage: number, perPage: number }) {
+    const products = await db.product.findMany({
+        skip: (currentPage - 1) * perPage,
+        take: perPage
+    })
+
+    return products;
+}
+
+export async function getTotalProductCount() {
+    const total = await db.product.count();
+
+    return total;
+}
+
 export async function getProductById({ id }: { id: string }) {
     const product = await db.product.findFirst({
         where: {

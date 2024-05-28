@@ -7,10 +7,15 @@ import CartIconWithUser from "./cartIcon";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { Search } from "lucide-react";
 import ProfileIcon from "./profileIcon";
+import { getUserDetailsByAuthId } from "@/actions/userAction";
 
 export default async function NavBar() {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
+
+  const userInfo = await getUserDetailsByAuthId({
+    authId: user?.id ?? "",
+  })
 
   return (
     <header className="fixed top-0 z-50 flex h-[5.5rem] w-[100vw] items-center justify-center bg-white px-2 shadow-sm">
@@ -50,9 +55,11 @@ export default async function NavBar() {
             <Button variant={"ghost"}>Team</Button>
           </Link>
 
-          <Link href="/dashboard">
-            <Button variant={"ghost"}>Dashboard</Button>
-          </Link>
+          {userInfo?.role === 'ADMIN' ? (
+            <Link href="/dashboard">
+              <Button variant={"ghost"}>Dashboard</Button>
+            </Link>
+          ) : null}
         </div>
 
         <div className="flex w-auto flex-row items-center justify-between gap-3">
