@@ -1,79 +1,80 @@
 "use client"
-
+import { Card } from '@/components/ui/card'
 import React, { useEffect, useState } from 'react'
-import { useSearchParams } from 'next/navigation';
-import { Product } from '@prisma/client';
-import { getPaginatedProducts, getTotalProductCount } from '@/actions/productAction';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+import { Text } from '../_components/text'
+import { getTotalProductCount } from '@/actions/productAction'
+import { getTotalUsersCount } from '@/actions/userAction';
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
+import { useRouter } from 'next/navigation'
+import { PencilRuler, Shirt, UsersRound } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 export default function Dashboard() {
-    const [products, setProducts] = useState<Product[]>([])
-    const [totalProducts, setTotalProducts] = useState<number>(0)
-    const searchParams = useSearchParams();
+    const [totalProducts, setTotalProducts] = useState(0)
+    const [totalUsers, setTotalUsers] = useState(0)
+    const { getUser, isLoading } = useKindeBrowserClient();
+    const user = getUser();
+    const router = useRouter();
 
-    // Pagination
-    const perPage = parseInt(searchParams.get('perPage') ?? "10");
-    const currentPage = parseInt(searchParams.get('currentPage') ?? "1");
-    const totalPages = Math.ceil(totalProducts / perPage);
-
-    const PaginationButtons: React.ReactElement[] = [];
-
-    for (let i = 1; i <= totalPages; i++) {
-        PaginationButtons.push(
-            <Link
-                href={`/dashboard?perPage=${perPage}&currentPage=${i}`}
-                key={i}
-            >
-                <Button
-                    variant={currentPage === i ? "default" : "outline"}
-                >
-                    {i}
-                </Button>
-            </Link>
-        );
-    }
-
-    //* Get total number of products on mount
     useEffect(() => {
-        async function totalProductsCount() {
-            const total = await getTotalProductCount();
-            setTotalProducts(total);
+        if (isLoading) return;
+
+        async function getInfo() {
+            const totalProducts = await getTotalProductCount();
+            const totalUsers = await getTotalUsersCount({ authId: user?.id! });
+
+            if (!totalUsers || totalUsers === null) return router.push('/api/auth/login?post_login_redirect_url=/home');
+
+            setTotalProducts(totalProducts);
+            setTotalUsers(totalUsers);
         }
 
-        void totalProductsCount();
-    }, [])
+        void getInfo();
+    }, [isLoading])
 
-    //* Fill products if searchParams is changed
-    useEffect(() => {
-        const getProducts = async () => {
-            const response = await getPaginatedProducts({
-                currentPage,
-                perPage
-            })
-
-            if (response) {
-                setProducts(response)
-            }
-        }
-
-        void getProducts();
-    }, [currentPage, perPage])
 
     return (
-        <div className=''>
-            <div className="space-y-3 divide-y">
-                {products.map((product, index) => (
-                    <div key={product.id} className="">
-                        <ol>
-                            <span>{index + 1}</span>
-                            <li>{product.productTitle}</li>
-                            <span>{product.price}</span>
-                        </ol>
-                    </div>
-                ))}
-                <div className="flex justify-center items-center gap-2">{PaginationButtons}</div>
+        <main>
+            <CardComponent
+                title='Total products'
+                count={totalProducts}
+                icon={<Shirt />}
+            />
+            <CardComponent
+                title='Total users'
+                count={totalUsers}
+                icon={<UsersRound />}
+            />
+            <CardComponent
+                title='Updated needed'
+                count={totalUsers}
+                icon={<PencilRuler />}
+            />
+        </main>
+    )
+}
+
+type CardComponentPropsType = {
+    count: number,
+    title: string,
+    icon: React.ReactElement,
+    iconClassName?: string
+}
+
+function CardComponent({ count, title, icon, iconClassName }: CardComponentPropsType) {
+    return (
+        <Card className='max-w-[15rem] p-4 text-left space-y-3'>
+            <div className="flex justify-between items-center">
+                <Text muted size='md' className='font-bold'>
+                    {title}
+                </Text>
+                <span className={cn('text-black/40', iconClassName)}>
+                    {icon}
+                </span>
             </div>
-        </div>
+            <Text size='max' className='font-bold text-black/90'>
+                {count}
+            </Text>
+        </Card>
     )
 }

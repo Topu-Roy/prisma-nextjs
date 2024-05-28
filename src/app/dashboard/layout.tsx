@@ -1,9 +1,12 @@
 "use client"
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils';
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
+import { getUserDetailsByAuthId } from '@/actions/userAction';
+import { Heading } from '../_components/heading';
 
 function LinkItem({ url, className, name }: { url: string, className?: string, name: string }) {
     return (
@@ -23,7 +26,38 @@ export default function RootLayout({
 }: {
     children: React.ReactNode;
 }) {
+    const [isLoading, setIsLoading] = useState(true);
     const path = usePathname();
+    const { getUser, isLoading: isUserInfoLoading } = useKindeBrowserClient();
+    const user = getUser();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (isUserInfoLoading === true) return;
+
+        async function checkAdmin() {
+            if (!user) return router.push('/api/auth/login?post_login_redirect_url=/home');
+
+            const isAdmin = await getUserDetailsByAuthId({ authId: user?.id });
+
+            if (isAdmin?.role !== 'ADMIN') return router.push('/api/auth/login?post_login_redirect_url=/home');
+            setIsLoading(false);
+        }
+
+        void checkAdmin();
+    }, [isUserInfoLoading])
+
+    if (isLoading) {
+        return (
+            <div className="mt-[5rem] max-w-[100rem] mx-auto py-20">
+                <Heading>
+                    Loading...
+                </Heading>
+            </div>
+        )
+    }
+
+
     return (
         <div className='mt-[5rem] max-w-[100rem] mx-auto py-20'>
             <div className="flex">
@@ -43,17 +77,6 @@ export default function RootLayout({
                         className={path.includes("products") ? "text-black bg-white" : ""}
                         name='Products'
                     />
-                    <Link className='w-full' href={'/dashboard/create'}>
-                        <Button variant={'link'} className='text-white font-semibold'>
-                            Sales
-                        </Button>
-                    </Link>
-                    <Link className='w-full' href={'/dashboard/create'}>
-                        <Button variant={'link'} className='text-white font-semibold'>
-                            Orders
-                        </Button>
-                    </Link>
-                    {path}
                 </aside>
                 <div className="flex-1 mx-auto">
                     {children}
